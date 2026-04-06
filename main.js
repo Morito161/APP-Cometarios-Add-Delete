@@ -7,7 +7,7 @@ const notifySucces = document.getElementById("notify-succes");
 function obtenerFechaHora() {
     const fecha = new Date();
 
-    const opciones = {
+    const datos = {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -16,7 +16,7 @@ function obtenerFechaHora() {
         second: "2-digit"
     };
 
-    return fecha.toLocaleString("es-MX", opciones);
+    return fecha.toLocaleString("es-MX", datos);
 }
 
 // Evento para publicar comentario
@@ -31,6 +31,7 @@ btnEnviar.addEventListener("click", () => {
     const fechaHora = obtenerFechaHora();
 
     // Crear li
+    // Crear NODO li
     const li = document.createElement("li");
 
     li.innerHTML = `
@@ -51,7 +52,7 @@ btnEnviar.addEventListener("click", () => {
                 <button class="px-2 py-1 rounded-xl bg-gray-200 hover:bg-gray-300">👍</button>
                 <button class="px-2 py-1 rounded-xl bg-gray-200 hover:bg-gray-300">👎</button>
                 <button class="btn_eliminar px-3 py-1 rounded-full bg-red-600 text-white hover:bg-red-700">
-                    Eliminar
+                    Delete
                 </button>
             </div>
         </div>
