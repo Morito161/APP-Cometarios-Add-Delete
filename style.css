@@ -1,0 +1,10 @@
+.notify {
+    visibility: hidden;
+    position: sticky;
+    top: 10px;
+    right: 0;
+}
+
+.relative_notify {
+    position: relative;
+}

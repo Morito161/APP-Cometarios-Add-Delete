@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Comenta APP</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="shortcut icon" href="./gorjeo.png" type="image/x-icon">
+</head>
+<body class="container px-4">
+    <nav class="flex justify-center items-center h-[60px] bg-blue-700" id="nav_bar" data-number="5">
+        <h1 class="text-white text-4xl">Bienvenido</h1>
+    </nav>
+
+    <div class="mt-4">
+        <input id="btn_select_color" type="color">
+        <button id="btb_color" type="button" class="bg-blue-700 px-4 py-2 rounded-sm text-white">
+            Nuevo color
+        </button>
+    </div>
+
+    <h2 class="mt-4 text-2xl font-bold">Comenta APP dev.f</h2>
+
+    <div class="w-full relative relative_notify mt-4">
+        <span id="notify-succes" class="notify h-10 bg-blue-800 text-white rounded-full px-4 flex items-center">
+            Gracias por añadir un comentario
+        </span>
+    </div>
+
+    <div class="mt-4 flex gap-2">
+        <input 
+            id="user_comment" 
+            class="border rounded-full px-4 py-2 w-[300px]" 
+            name="comentario" 
+            placeholder="comentario" 
+        />
+        <button class="bg-green-800 rounded-full px-4 py-2 text-white" id="btn_enviar">
+            Submit
+        </button>
+    </div>
+
+    <ul id="comment_box" class="mt-10">
+        <li>
+            <div class="comment_user border rounded-sm p-2 m-4">
+                <div class="flex items-end gap-2">
+                    <img class="w-[40px] bg-blue-700 hover:bg-blue-300 hover:cursor-pointer rounded-full shadow-cyan-500/50"
+                        src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" 
+                        alt="imagenDeUsuario">
+                    <span class="text-lg font-semibold">@luisRamblez</span>
+                    <span class="text-sm text-slate-500"></span>
+                </div>
+
+                <p class="mt-2">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </p>
+
+                <div class="mt-2 flex gap-2">
+                    <button>👍</button>
+                    <button>👎</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <script src="./main.js"></script>
+</body>
+</html>
