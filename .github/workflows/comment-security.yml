@@ -1,0 +1,69 @@
+name: Comment app security tests
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax and DOM injection defenses
+        run: |
+          node --check main.js
+          node <<'JS'
+          const fs=require('node:fs');
+          const assert=require('node:assert/strict');
+          const js=fs.readFileSync('main.js','utf8');
+          const html=fs.readFileSync('index.html','utf8');
+          assert.ok(!/\.innerHTML\s*=/.test(js),'Unexpected innerHTML assignment');
+          assert.ok(js.includes('message.textContent = comentario'));
+          assert.ok(js.includes('comentario.length > 1000'));
+          assert.ok(html.includes('maxlength="1000"'));
+          console.log('Static XSS safeguards passed');
+          JS
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Test comments and XSS in browser
+        run: |
+          node <<'JS'
+          const {chromium}=require('playwright');
+          const assert=require('node:assert/strict');
+          const path=require('node:path');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              const page=await browser.newPage();
+              const errors=[];
+              let dialogs=0;
+              page.on('pageerror',e=>errors.push(e.message));
+              page.on('dialog',d=>{dialogs++;d.dismiss()});
+              await page.goto('file://'+path.resolve('index.html'),{waitUntil:'domcontentloaded'});
+              const input=page.locator('#user_comment');
+              const submit=page.locator('#btn_enviar');
+              await input.fill('Comentario de prueba');
+              await submit.click();
+              assert.equal(await page.locator('#comment_box li').count(),2);
+              assert.equal(await page.locator('#comment_box li').last().locator('p').textContent(),'Comentario de prueba');
+              await page.locator('#comment_box li').last().locator('.btn_eliminar').click();
+              assert.equal(await page.locator('#comment_box li').count(),1);
+              const payload='<img src=x onerror=alert(1)>';
+              await input.fill(payload);
+              await submit.click();
+              const latest=page.locator('#comment_box li').last();
+              assert.equal(await latest.locator('p').textContent(),payload);
+              assert.equal(await latest.locator('p img').count(),0,'User comment rendered as HTML');
+              assert.equal(dialogs,0,'Unexpected script dialog');
+              assert.deepEqual(errors,[],'Browser JavaScript errors');
+              console.log('Comment submission, deletion and XSS regression passed');
+            } finally {await browser.close();}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
