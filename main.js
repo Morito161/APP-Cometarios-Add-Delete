@@ -28,7 +28,12 @@ btnEnviar.addEventListener("click", () => {
         return;
     }
 
-    if (comentario.length > 1000) {\n        alert("El comentario no puede superar los 1000 caracteres.");\n        return;\n    }\n\n    const fechaHora = obtenerFechaHora();
+    if (comentario.length > 1000) {
+        alert("El comentario no puede superar los 1000 caracteres.");
+        return;
+    }
+
+    const fechaHora = obtenerFechaHora();
 
     // Crear li
     // Crear NODO li
